@@ -38,6 +38,9 @@
 		INVOKE_ASYNC(src, PROC_REF(connect_to_second_server))
 	//SKYRAT EDIT END
 
+	to_chat(src, "<span class='notice'><b>Combat Mode Changes</b>\n \t</span>")
+	to_chat(src, "<span class='notice'><b>READ THIS PR BEFORE PLAYING TODAY:</b> https://github.com/tgstation/tgstation/pull/56601 \n \t</span>")
+
 	var/spc = CONFIG_GET(number/soft_popcap)
 	if(spc && living_player_count() >= spc)
 		to_chat(src, span_notice("<b>Server Notice:</b>\n \t [CONFIG_GET(string/soft_popcap_message)]"))

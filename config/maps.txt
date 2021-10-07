@@ -58,3 +58,8 @@ map blueshift
 	minplayers 50
 	votable
 endmap
+
+map blubshift
+	minplayers 50
+	votable
+endmap

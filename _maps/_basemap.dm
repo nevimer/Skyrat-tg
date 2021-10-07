@@ -20,7 +20,7 @@
 		#include "map_files\NSSJourney\NSSJourney.dmm" //SKYRAT EDIT ADDITON
 		#include "map_files\Mining\TidalLock.dmm" //SKYRAT EDIT ADDITION
 		#include "map_files\Blueshift\Blueshift.dmm" //SKYRAT EDIT ADDITION
-
+		#include "map_files\blubshift\blubshift-01.dmm" //SKYRAT EDIT ADDITION
 		#ifdef CIBUILDING
 			#include "templates.dm"
 		#endif

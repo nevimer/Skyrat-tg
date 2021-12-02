@@ -78,7 +78,7 @@
 	icon_state = "sunhudmed"
 	darkness_view = 1
 	flash_protect = FLASH_PROTECTION_FLASH
-	tint = 1
+	tint = 0.25
 	glass_colour_type = /datum/client_colour/glass_colour/blue
 
 /obj/item/clothing/glasses/hud/diagnostic
@@ -105,7 +105,7 @@
 	icon_state = "sunhuddiag"
 	inhand_icon_state = "glasses"
 	flash_protect = FLASH_PROTECTION_FLASH
-	tint = 1
+	tint = 0.25
 
 /obj/item/clothing/glasses/hud/security
 	name = "security HUD"
@@ -150,7 +150,7 @@
 	icon_state = "sunhudsec"
 	darkness_view = 1
 	flash_protect = FLASH_PROTECTION_FLASH
-	tint = 1
+	tint = 0.25
 	glass_colour_type = /datum/client_colour/glass_colour/darkred
 
 /obj/item/clothing/glasses/hud/security/night
@@ -245,7 +245,7 @@
 	icon_state = "bigsunglasses"
 	darkness_view = 1
 	flash_protect = FLASH_PROTECTION_FLASH
-	tint = 1
+	tint = 0.25
 	glass_colour_type = /datum/client_colour/glass_colour/gray
 
 

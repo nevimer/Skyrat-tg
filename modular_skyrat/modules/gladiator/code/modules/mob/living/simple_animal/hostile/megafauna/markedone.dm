@@ -184,8 +184,8 @@
 	if(ishuman(target))
 		var/mob/living/carbon/human/human_target = target
 		var/datum/species/targetspecies = human_target.dna.species
-		// The gladiator is extremely racist against anyone but humans (he is based)
-		// He especially hates ash l words
+		// The gladiator is extremely racist against anyone but humans
+		// He especially hates ash walkers
 		if(targetspecies.id == SPECIES_HUMAN)
 			var/static/list/human_messages = list(
 									"When you are ready, you may end the madness. Give me an honorable death.", \

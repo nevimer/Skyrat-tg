@@ -41,9 +41,6 @@
 
 	check_cremation(delta_time, times_fired)
 
-	//Updates the number of stored chemicals for powers
-	handle_changeling(delta_time, times_fired)
-
 	if(. && mind) //. == not dead
 		for(var/key in mind.addiction_points)
 			var/datum/addiction/addiction = SSaddiction.all_addictions[key]
@@ -403,18 +400,6 @@
 		if(W.processes) // meh
 			W.handle_process(delta_time, times_fired)
 
-//todo generalize this and move hud out
-/mob/living/carbon/proc/handle_changeling(delta_time, times_fired)
-	if(mind && hud_used?.lingchemdisplay)
-		var/datum/antagonist/changeling/changeling = mind.has_antag_datum(/datum/antagonist/changeling)
-		if(changeling)
-			changeling.regenerate(delta_time, times_fired)
-			hud_used.lingchemdisplay.invisibility = 0
-			hud_used.lingchemdisplay.maptext = MAPTEXT("<div align='center' valign='middle' style='position:relative; top:0px; left:6px'><font color='#dd66dd'>[round(changeling.chem_charges)]</font></div>")
-		else
-			hud_used.lingchemdisplay.invisibility = INVISIBILITY_ABSTRACT
-
-
 /mob/living/carbon/handle_mutations(time_since_irradiated, delta_time, times_fired)
 	if(!dna?.temporary_mutations.len)
 		return
@@ -549,6 +534,8 @@ All effects don't start immediately, but rather get worse over time; the rate is
 			SEND_SIGNAL(src, COMSIG_CLEAR_MOOD_EVENT, "drunk")
 			clear_alert("drunk")
 			sound_environment_override = SOUND_ENVIRONMENT_NONE
+			REMOVE_TRAIT(src, TRAIT_NUMBED, src) //SKYRAT EDIT START - ANESTHETIC EFFECT REMOVAL
+			clear_alert("numbed") //SKYRAT EDIT END
 
 		if(drunkenness >= 11 && slurring < 5)
 			slurring += 0.6 * delta_time
@@ -567,6 +554,8 @@ All effects don't start immediately, but rather get worse over time; the rate is
 			if(DT_PROB(16, delta_time))
 				add_confusion(2)
 			Dizzy(5 * delta_time)
+			ADD_TRAIT(src, TRAIT_NUMBED, src) //SKYRAT EDIT START - ANESTHETIC EFFECT ADDITION
+			throw_alert("numbed", /atom/movable/screen/alert/numbed) //SKYRAT EDIT END
 
 		if(drunkenness >= 51)
 			if(DT_PROB(1.5, delta_time))

@@ -404,7 +404,7 @@ GLOBAL_VAR_INIT(cops_arrived, FALSE)
 				return
 			calling_911(usr, "EMTs", EMERGENCY_RESPONSE_EMT)
 		if("callThePizza")
-			if(obj_flags & EMAGGED)
+			if(!(obj_flags & EMAGGED))
 				return
 			if(!pre_911_check(usr))
 				return
@@ -445,7 +445,9 @@ GLOBAL_VAR_INIT(cops_arrived, FALSE)
 		payload["network"] = network_name
 	payload["sender_ckey"] = usr.ckey
 
-	send2otherserver(html_decode(station_name()), message, "Comms_Console", destination == "all" ? null : list(destination), additional_data = payload)
+	var/name_to_send = "[CONFIG_GET(string/cross_comms_name)]([station_name()])" //SKYRAT EDIT ADDITION
+
+	send2otherserver(html_decode(name_to_send), message, "Comms_Console", destination == "all" ? null : list(destination), additional_data = payload) //SKYRAT EDIT END
 	minor_announce(message, title = "Outgoing message to allied station")
 	usr.log_talk(message, LOG_SAY, tag = "message to the other server")
 	message_admins("[ADMIN_LOOKUPFLW(usr)] has sent a message to the other server\[s].")
@@ -695,7 +697,7 @@ GLOBAL_VAR_INIT(cops_arrived, FALSE)
 	if(!SScommunications.can_announce(user, is_ai))
 		to_chat(user, span_alert("Intercomms recharging. Please stand by."))
 		return
-	var/input = stripped_input(user, "Please choose a message to announce to the station crew.", "What?")
+	var/input = tgui_input_text(user, "Message to announce to the station crew", "Announcement")
 	if(!input || !user.canUseTopic(src, !issilicon(usr)))
 		return
 	if(!(user.can_speak())) //No more cheating, mime/random mute guy!

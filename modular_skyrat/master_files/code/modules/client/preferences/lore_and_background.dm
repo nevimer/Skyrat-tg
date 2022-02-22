@@ -1,35 +1,29 @@
 //Education Rates
 #define BASE_PAY_RATE 1
-#define RATE_1_REDUCTION 0.25
-#define RATE_2_REDUCTION 0.15
+#define RATE_1_REDUCTION 0.60
+#define RATE_2_REDUCTION 0.1
 #define RATE_3_REDUCTION 0
 #define NEW_HIRE_RATE 0.25
 #define ERROR_RATE 0.35
-//Location Based Rates
-#define EARTH 0.05
-#define LUNA 0
-#define MARS 0.10
-//Faction Based Rates
-#define NANOTRASEN 0
-#define SOLGOV 0.02
-#define TAU_CETI_SCHOOL -0.1
-#define TERRAGOV 0.03
-#define STATELESS 0.25
-//Elses
-#define UNSET_RATE 0
 
+
+#define UNSET_RATE 0
+#define DEBTSLAVE "Debtslave"
+#define MIGRANT "Migrant Worker"
+#define LOST "Slipped through the cracks"
+#define SLAVE "Indentured Servant"
+#define NORMAL "Regular Employee"
+
+#define OLD_MONEY "Old Money"
+#define PRODIGY "Prodigy"
+#define C_LIST "C-List Celebrity"
+#define FAVORED "Nanotrasen Favored Employee"
 //Educational Code
 /datum/preference/choiced/education
 	savefile_key = "feature_education"
 	savefile_identifier = PREFERENCE_CHARACTER
 	category = PREFERENCE_CATEGORY_NON_CONTEXTUAL
-/* 	var/base_rate = 1
-	var/actual_payout
-	var/error_rate = 0.25
-	var/new_hire_rate = 0.25
-	var/rate_1_reduction = 0.25
-	var/rate_2_reduction = 0.15
-	var/rate_3_reduction = 0 */
+
 
 	var/possible_options_education = list(
 		"Trainee",
@@ -49,17 +43,19 @@
 
 /datum/preference/choiced/education/apply_to_human(mob/living/carbon/human/target, value)
 	switch(value)
-		if(TRUE && "Uneducated" || "Underemployed")
+		if(TRUE && "Uneducated", "Underemployed")
 			message_admins("[target],[value],[target.payday_modifier]\n")
+			if(value == "Uneducated")
+				ADD_TRAIT(target, TRAIT_DUMB, INNATE_TRAIT) // placeholder
 			target.payday_modifier -= RATE_1_REDUCTION
 			message_admins("[target],[value],[target.payday_modifier]\n")
 
-		if(TRUE && "Vocational" || "Trainee" || "Student")
+		if(TRUE && "Vocational", "Trainee", "Student")
 			message_admins("[target],[value],[target.payday_modifier]\n")
 			target.payday_modifier -= RATE_2_REDUCTION
 			message_admins("[target],[value],[target.payday_modifier]\n")
 
-		if(TRUE && "Post-Secondary" || "Unionized")
+		if(TRUE && "Post-Secondary", "Unionized")
 			message_admins("[target],[value],[target.payday_modifier]\n")
 			target.payday_modifier -= RATE_3_REDUCTION
 			message_admins("[target],[value],[target.payday_modifier]\n")
@@ -72,109 +68,100 @@
 	return NEW_HIRE_RATE
 
 //Faction Code
-/datum/preference/choiced/faction
-	savefile_key = "feature_faction"
+/datum/preference/choiced/origin
+	savefile_key = "feature_origin"
 	savefile_identifier = PREFERENCE_CHARACTER
 	category = PREFERENCE_CATEGORY_NON_CONTEXTUAL
-	var/possible_options_faction = list(
-		"Nanotrasen",
-		"Solgov",
-		"Tau Ceti",
-		"TerraGov",
-		"Stateless",
-		"Free Trade Union",
-		"Expeditionary Corps Organisation",
-		"Gilgamesh Colonial Confederation",
-		"Xynergy",
-		"Hephaestus Industries",
-		"Strategic Assault and Asset Retention Enterprises",
-		"Deimos Advanced Information Systems",
-		"Other"
+	var/possible_options_origin = list(
+		DEBTSLAVE,
+		MIGRANT,
+		LOST,
+		SLAVE,
+		NORMAL
 		)
 
-/datum/preference/choiced/faction/is_accessible(datum/preferences/preferences)
+/datum/preference/choiced/origin/is_accessible(datum/preferences/preferences)
 	var/passed_initial_check = ..(preferences)
 	return (passed_initial_check)
 
-/datum/preference/choiced/faction/init_possible_values()
-	return possible_options_faction
+/datum/preference/choiced/origin/init_possible_values()
+	return possible_options_origin
 
-/datum/preference/choiced/faction/apply_to_human(mob/living/carbon/human/target, value)
+/datum/preference/choiced/origin/apply_to_human(mob/living/carbon/human/target, value)
 	switch(value)
-		if(TRUE && "Nanotrasen")
+		if(TRUE && NORMAL)
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= NANOTRASEN
-			message_admins("[target],[value],[target.payday_modifier]\n")
-
-		if(TRUE && "Solgov")
-			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= SOLGOV
+			target.payday_modifier -= 0
 			message_admins("[target],[value],[target.payday_modifier]\n")
 
-		if(TRUE && "Tau Ceti")
+		if(TRUE && MIGRANT)
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= TAU_CETI_SCHOOL
+			target.payday_modifier -= RATE_2_REDUCTION // Todo, trait here.
 			message_admins("[target],[value],[target.payday_modifier]\n")
 
-		if(TRUE && "TerraGov")
+		if(TRUE && LOST)
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= TERRAGOV
+			target.payday_modifier = 0 // Todo, trait here.
+			message_admins("[target],[value],[target.payday_modifier]\n")
+
+		if(TRUE && SLAVE, DEBTSLAVE)
+			message_admins("[target],[value],[target.payday_modifier]\n")
+			target.payday_modifier = 0 // Todo, trait here.
 			message_admins("[target],[value],[target.payday_modifier]\n")
 
 		else //Failsafe for bad input.. Unset is stateless, undefined inputs = NANOTRASEN(no difference) .
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= value ? NANOTRASEN : UNSET_RATE
+			target.payday_modifier -= value ? NEW_HIRE_RATE : UNSET_RATE
 			message_admins("[target],[value],[target.payday_modifier]\n")
 
-/datum/preference/choiced/faction/create_default_value()
-	return SOLGOV
+/datum/preference/choiced/origin/create_default_value()
+	return NORMAL
 
 //Faction Code
-/datum/preference/choiced/homeworld
-	savefile_key = "feature_homeworld"
+/datum/preference/choiced/social_status
+	savefile_key = "feature_social_status"
 	savefile_identifier = PREFERENCE_CHARACTER
 	category = PREFERENCE_CATEGORY_NON_CONTEXTUAL
-	var/possible_options_homeworld = list(
-		"Gaia",
-		"Sol",
-		"Ceti Epsilon",
-		"Terra",
-		"Stateless",
-		"Other",
+	var/possible_options_social_status = list(
+		OLD_MONEY,
+		C_LIST,
+		PRODIGY,
+		FAVORED,
+		NORMAL
 		)
 
-/datum/preference/choiced/homeworld/is_accessible(datum/preferences/preferences)
+/datum/preference/choiced/social_status/is_accessible(datum/preferences/preferences)
 	var/passed_initial_check = ..(preferences)
 	return (passed_initial_check)
 
-/datum/preference/choiced/homeworld/init_possible_values()
-	return possible_options_homeworld
+/datum/preference/choiced/social_status/init_possible_values()
+	return possible_options_social_status
 
-/datum/preference/choiced/homeworld/apply_to_human(mob/living/carbon/human/target, value)
+/datum/preference/choiced/social_status/apply_to_human(mob/living/carbon/human/target, value)
 	switch(value)
-		if(TRUE && "Gaia")
+		if(TRUE && NORMAL)
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= EARTH
+			target.payday_modifier -= RATE_3_REDUCTION
 			message_admins("[target],[value],[target.payday_modifier]\n")
-		if(TRUE && "Sol")
+		if(TRUE && C_LIST)
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= SOLGOV
+			target.payday_modifier -= RATE_3_REDUCTION // Todo, trait here.
 			message_admins("[target],[value],[target.payday_modifier]\n")
-		if(TRUE && "Ceti Epsilon")
+		if(TRUE && PRODIGY)
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= TAU_CETI_SCHOOL
+			target.payday_modifier -= RATE_3_REDUCTION // Todo, trait here.
 			message_admins("[target],[value],[target.payday_modifier]\n")
-		if(TRUE && "Terra")
+		if(TRUE && FAVORED)
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= TERRAGOV
+			target.payday_modifier -= RATE_3_REDUCTION // Todo, trait here.
 			message_admins("[target],[value],[target.payday_modifier]\n")
 		else //Failsafe for bad input.. Unset is stateless
 			message_admins("[target],[value],[target.payday_modifier]\n")
-			target.payday_modifier -= value ? LUNA : UNSET_RATE
+			target.payday_modifier -= value ? RATE_3_REDUCTION : UNSET_RATE
 			message_admins("[target],[value],[target.payday_modifier]\n")
 
-/datum/preference/choiced/homeworld/create_default_value()
-	return EARTH
+/datum/preference/choiced/social_status/create_default_value()
+	return NORMAL
 
 
 /mob/living/carbon/human

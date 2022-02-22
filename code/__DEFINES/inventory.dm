@@ -98,8 +98,16 @@
 #define HIDEHEADGEAR (1<<11)
 ///for lizard snouts, because some HIDEFACE clothes don't actually conceal that portion of the head.
 #define HIDESNOUT (1<<12)
-//SKYRAT EDIT ADDITION BEGIN - ERP UPDATE
-#define HIDESEXTOY (1<<13)
+///hides mutant/moth wings, does not apply to functional wings
+#define HIDEMUTWINGS (1<<13)
+
+//SKYRAT EDIT ADDITION: CUSTOM EAR TOGGLE FOR ANTHRO/ETC EAR SHOWING -
+/// Manually set this on items you want anthro ears to show on!
+#define SHOWSPRITEEARS (1<<13)
+/// Does this sprite also hide the spine on tails? Realistically only useful for the clothes that have a special tail overlay, like MODsuits
+#define HIDESPINE (1<<14)
+/// Does this sprite hide devious devices?
+#define HIDESEXTOY (1<<15)
 //SKYRAT EDIT ADDITION END
 
 //bitflags for clothing coverage - also used for limbs
@@ -166,30 +174,7 @@
 /// The index of the entry in 'afk_thefts' with the time it happened
 #define AFK_THEFT_TIME 3
 
-//Allowed equipment lists for security vests and hardsuits.
-
-GLOBAL_LIST_INIT(advanced_hardsuit_allowed, typecacheof(list(
-	/obj/item/ammo_box,
-	/obj/item/ammo_casing,
-	/obj/item/flashlight,
-	/obj/item/gun,
-	/obj/item/melee/baton,
-	/obj/item/reagent_containers/spray/pepper,
-	/obj/item/restraints/handcuffs,
-	/obj/item/tank/internals,
-	)))
-
-GLOBAL_LIST_INIT(security_hardsuit_allowed, typecacheof(list(
-	/obj/item/ammo_box,
-	/obj/item/ammo_casing,
-	/obj/item/flashlight,
-	/obj/item/gun/ballistic,
-	/obj/item/gun/energy,
-	/obj/item/melee/baton,
-	/obj/item/reagent_containers/spray/pepper,
-	/obj/item/restraints/handcuffs,
-	/obj/item/tank/internals,
-	)))
+//Allowed equipment lists for security vests.
 
 GLOBAL_LIST_INIT(detective_vest_allowed, typecacheof(list(
 	/obj/item/ammo_box,
@@ -208,6 +193,8 @@ GLOBAL_LIST_INIT(detective_vest_allowed, typecacheof(list(
 	/obj/item/tank/internals/plasmaman,
 	/obj/item/storage/belt/holster/detective,
 	/obj/item/storage/belt/holster/nukie,
+	/obj/item/storage/belt/holster/thermal,
+	/obj/item/gun/microfusion, //SKYRAT EDIT ADDITION
 	)))
 
 GLOBAL_LIST_INIT(security_vest_allowed, typecacheof(list(
@@ -224,6 +211,8 @@ GLOBAL_LIST_INIT(security_vest_allowed, typecacheof(list(
 	/obj/item/tank/internals/plasmaman,
 	/obj/item/storage/belt/holster/detective,
 	/obj/item/storage/belt/holster/nukie,
+	/obj/item/storage/belt/holster/thermal,
+	/obj/item/gun/microfusion, //SKYRAT EDIT ADDITION
 	)))
 
 GLOBAL_LIST_INIT(security_wintercoat_allowed, typecacheof(list(
@@ -236,6 +225,8 @@ GLOBAL_LIST_INIT(security_wintercoat_allowed, typecacheof(list(
 	/obj/item/restraints/handcuffs,
 	/obj/item/storage/belt/holster/detective,
 	/obj/item/storage/belt/holster/nukie,
+	/obj/item/storage/belt/holster/thermal,
+	/obj/item/gun/microfusion, //SKYRAT EDIT ADDITION
 	)))
 
 /// String for items placed into the left pocket.

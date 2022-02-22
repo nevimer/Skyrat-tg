@@ -66,6 +66,10 @@
 	name = "red-sleeved victorian vest"
 	icon_state = "victorianvest_red"
 
+/obj/item/clothing/under/costume/vic_vest/green
+	name = "green-sleeved victorian vest"
+	icon_state = "victorianvest_green"
+
 /obj/item/clothing/under/costume/vic_vest/blue
 	name = "blue-sleeved victorian vest"
 	icon_state = "victorianvest_blue"
@@ -129,7 +133,7 @@
 /obj/item/clothing/under/misc/greyshirt
 	icon = 'modular_skyrat/master_files/icons/obj/clothing/uniforms.dmi'
 	worn_icon = 'modular_skyrat/master_files/icons/mob/clothing/uniform.dmi'
-	name = "Grey Shirt"
+	name = "grey shirt"
 	desc = "A plain grey shirt and black pants - a much more rugged option compared to the jumpsuit."
 	icon_state = "greyshirt"
 

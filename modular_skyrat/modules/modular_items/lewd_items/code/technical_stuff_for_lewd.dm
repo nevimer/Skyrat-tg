@@ -50,11 +50,7 @@
 
 /obj/item/storage/box/milking_kit/PopulateContents()
 	var/static/items_inside = list(
-		/obj/item/milking_machine/constructionkit = 1,
-		/obj/item/reagent_containers/glass/beaker = 1,
-		/obj/item/stock_parts/cell/upgraded = 1, //please, let it be. 1 lvl Cell makes machine almost useless, charge lasts only for 2 minutes.
-		/obj/item/screwdriver = 1,
-		/obj/item/wrench = 1)
+		/obj/item/milking_machine/constructionkit = 1)
 	generate_items_inside(items_inside,src)
 
 //X-Stand
@@ -64,8 +60,7 @@
 
 /obj/item/storage/box/xstand_kit/PopulateContents()
 	var/static/items_inside = list(
-		/obj/item/x_stand_kit = 1,
-		/obj/item/wrench = 1)
+		/obj/item/x_stand_kit = 1)
 	generate_items_inside(items_inside,src)
 
 //BDSM bed
@@ -75,8 +70,7 @@
 
 /obj/item/storage/box/bdsmbed_kit/PopulateContents()
 	var/static/items_inside = list(
-		/obj/item/bdsm_bed_kit = 1,
-		/obj/item/wrench = 1)
+		/obj/item/bdsm_bed_kit = 1)
 	generate_items_inside(items_inside,src)
 
 //Striptease pole
@@ -86,10 +80,24 @@
 
 /obj/item/storage/box/strippole_kit/PopulateContents()
 	var/static/items_inside = list(
-		/obj/item/polepack = 1,
-		/obj/item/wrench = 1)
+		/obj/item/polepack = 1)
 	generate_items_inside(items_inside,src)
 
+//Shibari stand
+/obj/item/storage/box/shibari_stand
+	name = "DIY Shibari stand kit"
+	desc = "Contains everything you need to build your own shibari stand!"
+
+/obj/item/storage/box/shibari_stand/PopulateContents()
+	var/static/items_inside = list(
+		/obj/item/shibari_stand_kit = 1,
+		/obj/item/paper/shibari_kit_instructions = 1)
+	generate_items_inside(items_inside,src)
+
+//Paper instructions for shibari kit
+
+/obj/item/paper/shibari_kit_instructions
+	info = "Hello! Congratulations on your purchase of the shibari kit by LustWish! Some newbies may get confused by our ropes, so we prepared a small instructions for you! First of all, you have to have a wrench to construct the stand itself. Secondly, you can use screwdrivers to change the color of your shibari stand. Just replace the plastic fittings! Thirdly, if you want to tie somebody to a bondage stand you need to fully tie their body, on both groin and chest!. To do that you need to use rope on body and then on groin of character, then you can just buckle them to the stand like any chair. Don't forget to have some ropes on your hand to actually tie them to the stand, as there's no ropes included with it! And that's it!"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////This code is supposed to be placed in "code/modules/mob/living/carbon/human/inventory.dm"/////////////
 //If you are nice person you can transfer this part of code to it, but i didn't for modularisation reasons//
@@ -903,16 +911,16 @@
 
 // Add to hud class additional ERP variable boolean for check inventiry status (equipped or not)
 /datum/hud
-	var/list/ERP_toggleable_inventory = list() //the screen ERP objects which can be hidden
+	var/list/erp_toggleable_inventory = list() //the screen ERP objects which can be hidden
 	var/ERP_inventory_shown = FALSE //Equipped item ERP inventory
 
 // Define additional button for ERP hud slots for expand/collapse like default inventory
-/atom/movable/screen/human/ERP_toggle
-	name = "ERP_toggle"
+/atom/movable/screen/human/erp_toggle
+	name = "erp_toggle"
 	icon_state = "toggle"
 
 // ERP inventory button logic. Just expand/collapse
-/atom/movable/screen/human/ERP_toggle/Click()
+/atom/movable/screen/human/erp_toggle/Click()
 
 	var/mob/targetmob = usr
 
@@ -923,10 +931,10 @@
 
 	if(usr.hud_used.ERP_inventory_shown && targetmob.hud_used)
 		usr.hud_used.ERP_inventory_shown = FALSE
-		usr.client.screen -= targetmob.hud_used.ERP_toggleable_inventory
+		usr.client.screen -= targetmob.hud_used.erp_toggleable_inventory
 	else
 		usr.hud_used.ERP_inventory_shown = TRUE
-		usr.client.screen += targetmob.hud_used.ERP_toggleable_inventory
+		usr.client.screen += targetmob.hud_used.erp_toggleable_inventory
 
 	targetmob.hud_used.hidden_inventory_update(usr)
 
@@ -1146,17 +1154,6 @@ GLOBAL_LIST_INIT(strippable_human_erp_items, create_erp_strippable_list(list(
 
 // Extends default proc check for hidden skrell hair for supporting our sleepbag and catsuit to
 /datum/sprite_accessory/tails/is_hidden(mob/living/carbon/human/H, obj/item/bodypart/HD)
-	// // Default proc code
-	// if(H.wear_suit)
-	// 	if(H.try_hide_mutant_parts)
-	// 		return TRUE
-	// 	if(H.wear_suit.flags_inv & HIDEJUMPSUIT)
-	// 		if(istype(H.wear_suit, /obj/item/clothing/suit/space/hardsuit))
-	// 			var/obj/item/clothing/suit/space/hardsuit/HS = H.wear_suit
-	// 			if(HS.hardsuit_tail_colors)
-	// 				return FALSE
-	// 		return TRUE
-	// return FALSE
 
 	. = ..()
 	if(!.) // If true, tail already hidden
@@ -1207,8 +1204,8 @@ GLOBAL_LIST_INIT(strippable_human_erp_items, create_erp_strippable_list(list(
 	. = ..()
 	if(client?.prefs?.read_preference(/datum/preference/toggle/erp/sex_toy))
 		if(client.mob.hud_used)
-			for(var/atom/movable/screen/human/ERP_toggle/E in client.mob.hud_used.static_inventory)
-				if(istype(E, /atom/movable/screen/human/ERP_toggle))
+			for(var/atom/movable/screen/human/erp_toggle/E in client.mob.hud_used.static_inventory)
+				if(istype(E, /atom/movable/screen/human/erp_toggle))
 					E.invisibility = 0
 	else
 		if(ishuman(client.mob))
@@ -1224,12 +1221,15 @@ GLOBAL_LIST_INIT(strippable_human_erp_items, create_erp_strippable_list(list(
 		if(client.mob.hud_used)
 			if(client.mob.hud_used.ERP_inventory_shown)
 				client.mob.hud_used.ERP_inventory_shown = FALSE
-				client.screen -= client.mob.hud_used.ERP_toggleable_inventory
+				client.screen -= client.mob.hud_used.erp_toggleable_inventory
 
-			for(var/atom/movable/screen/human/ERP_toggle/E in client.mob.hud_used.static_inventory)
-				if(istype(E, /atom/movable/screen/human/ERP_toggle))
+			for(var/atom/movable/screen/human/erp_toggle/E in client.mob.hud_used.static_inventory)
+				if(istype(E, /atom/movable/screen/human/erp_toggle))
 					E.invisibility = 100
 
 
 	client.mob.hud_used.hidden_inventory_update(client.mob)
 	client.mob.hud_used.persistent_inventory_update(client.mob)
+
+/obj/item/proc/is_in_genital(mob/living/carbon/human/the_guy)
+	return !!(src == the_guy.penis || src == the_guy.vagina || src == the_guy.anus || src == the_guy.nipples)

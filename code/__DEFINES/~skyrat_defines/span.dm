@@ -10,3 +10,6 @@
 #define span_smalldanger(str) ("<span class='smalldanger'>" + str + "</span>")
 #define span_userlove(str) ("<span class='userlove'>" + str + "</span>")
 #define span_warningplain(str) ("<span class='warningplain'>" + str + "</span>")
+#define span_crossooc(str) ("<span class='crossooc'>" + str + "</span>")
+#define span_crossasay(str) ("<span class='crossasay'>" + str + "</span>")
+#define span_doyourjobidiot(str) ("<span class='doyourjobidiot'>" + str + "</span>")

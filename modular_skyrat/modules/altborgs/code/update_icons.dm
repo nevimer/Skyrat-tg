@@ -1,9 +1,9 @@
 /mob/living/silicon/robot/update_icons()
 	icon = (model.cyborg_icon_override ? model.cyborg_icon_override : initial(icon))
 	. = ..()
-	update_dogborg_icons()
+	update_altborg_icons()
 
-/mob/living/silicon/robot/proc/update_dogborg_icons()
+/mob/living/silicon/robot/proc/update_altborg_icons()
 	var/extra_overlay
 	for(var/i in held_items)
 		var/obj/item/O = i
@@ -23,15 +23,8 @@
 	//if(sleeper_r && model.sleeper_overlay)
 	//	add_overlay("[model.sleeper_overlay]_r[sleeper_nv ? "_nv" : ""]")
 
-	if(model.cyborg_pixel_offset != null)
-		pixel_x = model.cyborg_pixel_offset
-
-	if(model.cyborg_base_icon == "robot")
-		icon = 'icons/mob/robots.dmi'
-		pixel_x = initial(pixel_x)
-
 	if(robot_resting)
-		if(stat != DEAD && is_dogborg())
+		if(stat != DEAD && can_rest())
 			switch(robot_resting)
 				if(ROBOT_REST_NORMAL)
 					icon_state = "[model.cyborg_base_icon]-rest"
@@ -44,6 +37,10 @@
 			cut_overlays()
 	else
 		icon_state = "[model.cyborg_base_icon]"
+
+	if((R_TRAIT_UNIQUETIP in model.model_features) && (TRAIT_IMMOBILIZED in status_traits))
+		icon_state = "[model.cyborg_base_icon]-tipped"
+		cut_overlays()
 
 	if(stat == DEAD && (R_TRAIT_UNIQUEWRECK in model.model_features))
 		icon_state = "[model.cyborg_base_icon]-wreck"

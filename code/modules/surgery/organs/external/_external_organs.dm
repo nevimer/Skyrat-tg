@@ -9,6 +9,7 @@
 
 	///Unremovable is until the features are completely finished
 	organ_flags = ORGAN_UNREMOVABLE | ORGAN_EDIBLE
+	visual = TRUE
 
 	///Sometimes we need multiple layers, for like the back, middle and front of the person
 	var/layers
@@ -119,6 +120,10 @@
 			return "_ADJ"
 		if(BODY_FRONT_LAYER)
 			return "_FRONT"
+		//SKYRAT EDIT ADDITION BEGIN
+		if(BODY_FRONT_UNDER_CLOTHES)
+			return "_FRONT"
+		//SKYRAT EDIT ADDITION END
 
 ///Converts a bitflag to the right layer. I'd love to make this a static index list, but byond made an attempt on my life when i did
 /obj/item/organ/external/proc/bitflag_to_layer(layer)
@@ -150,7 +155,7 @@
 
 	var/list/feature_list = get_global_feature_list()
 
-	set_sprite(feature_list[deconstruct_block(getblock(features, dna_block), feature_list.len)])
+	set_sprite(feature_list[deconstruct_block(get_uni_feature_block(features, dna_block), feature_list.len)])
 
 ///The horns of a lizard!
 /obj/item/organ/external/horns

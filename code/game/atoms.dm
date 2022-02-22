@@ -56,8 +56,6 @@
 	///overlays managed by [update_overlays][/atom/proc/update_overlays] to prevent removing overlays that weren't added by the same proc. Single items are stored on their own, not in a list.
 	var/list/managed_overlays
 
-	///Proximity monitor associated with this atom
-	var/datum/proximity_monitor/proximity_monitor
 	///Cooldown tick timer for buckle messages
 	var/buckle_message_cooldown = 0
 	///Last fingerprints to touch this atom
@@ -372,7 +370,7 @@
 		return FALSE
 
 	if(is_reserved_level(current_turf.z))
-		for(var/obj/docking_port/mobile/mobile_docking_port as anything in SSshuttle.mobile)
+		for(var/obj/docking_port/mobile/mobile_docking_port as anything in SSshuttle.mobile_docking_ports)
 			if(mobile_docking_port.launch_status != ENDGAME_TRANSIT)
 				continue
 			for(var/area/shuttle/shuttle_area as anything in mobile_docking_port.shuttle_areas)
@@ -387,7 +385,7 @@
 		return TRUE
 
 	//Check for centcom shuttles
-	for(var/obj/docking_port/mobile/mobile_docking_port as anything in SSshuttle.mobile)
+	for(var/obj/docking_port/mobile/mobile_docking_port as anything in SSshuttle.mobile_docking_ports)
 		if(mobile_docking_port.launch_status == ENDGAME_LAUNCHED)
 			for(var/place as anything in mobile_docking_port.shuttle_areas)
 				var/area/shuttle/shuttle_area = place
@@ -574,7 +572,8 @@
  */
 /atom/proc/bullet_act(obj/projectile/hitting_projectile, def_zone, piercing_hit = FALSE)
 	SEND_SIGNAL(src, COMSIG_ATOM_BULLET_ACT, hitting_projectile, def_zone)
-	. = hitting_projectile.on_hit(src, 0, def_zone, piercing_hit)
+	var/armor = check_projectile_armor(def_zone, hitting_projectile)
+	. = hitting_projectile.on_hit(src, armor, def_zone, piercing_hit)
 
 ///Return true if we're inside the passed in atom
 /atom/proc/in_contents_of(container)//can take class or object instance as argument
@@ -803,12 +802,12 @@
 /**
  * React to being hit by an explosion
  *
- * Default behaviour is to call [contents_explosion][/atom/proc/contents_explosion] and send the [COMSIG_ATOM_EX_ACT] signal
+ * Should be called through the [EX_ACT] wrapper macro.
+ * The wrapper takes care of the [COMSIG_ATOM_EX_ACT] signal.
+ * as well as calling [/atom/proc/contents_explosion].
  */
 /atom/proc/ex_act(severity, target)
 	set waitfor = FALSE
-	contents_explosion(severity, target)
-	SEND_SIGNAL(src, COMSIG_ATOM_EX_ACT, severity, target)
 
 /**
  * React to a hit by a blob objecd
@@ -1006,7 +1005,7 @@
 	return TRUE
 
 ///Get the best place to dump the items contained in the source storage item?
-/atom/proc/get_dumping_location(obj/item/storage/source,mob/user)
+/atom/proc/get_dumping_location()
 	return null
 
 /**
@@ -1418,6 +1417,7 @@
 			if(TOOL_ANALYZER)
 				act_result = analyzer_act_secondary(user, tool)
 	if(act_result) // A tooltype_act has completed successfully
+		log_tool("[key_name(user)] used [tool] on [src][is_right_clicking ? "(right click)" : ""] at [AREACOORD(src)]")
 		return TOOL_ACT_TOOLTYPE_SUCCESS
 
 
@@ -1446,8 +1446,9 @@
 
 
 /atom/proc/StartProcessingAtom(mob/living/user, obj/item/process_item, list/chosen_option)
+	var/processing_time = chosen_option[TOOL_PROCESSING_TIME]
 	to_chat(user, span_notice("You start working on [src]."))
-	if(process_item.use_tool(src, user, chosen_option[TOOL_PROCESSING_TIME], volume=50))
+	if(process_item.use_tool(src, user, processing_time, volume=50))
 		var/atom/atom_to_create = chosen_option[TOOL_PROCESSING_RESULT]
 		var/list/atom/created_atoms = list()
 		for(var/i = 1 to chosen_option[TOOL_PROCESSING_AMOUNT])
@@ -1592,9 +1593,9 @@
 		//SKYRAT EDIT ADDITION BEGIN
 		if(LOG_SUBTLER)
 			log_subtler(log_text)
-		if(LOG_AMBITION)
-			log_ambition(log_text)
 		//SKYRAT EDIT ADDITION END
+		if(LOG_RADIO_EMOTE)
+			log_radio_emote(log_text)
 		if(LOG_DSAY)
 			log_dsay(log_text)
 		if(LOG_PDA)
@@ -1640,10 +1641,10 @@
  * * log_globally - boolean checking whether or not we write this log to the log file
  * * forced_by - source that forced the dialogue if any
  */
-/atom/proc/log_talk(message, message_type, tag=null, log_globally=TRUE, forced_by=null)
+/atom/proc/log_talk(message, message_type, tag = null, log_globally = TRUE, forced_by = null, custom_say_emote = null)
 	var/prefix = tag ? "([tag]) " : ""
 	var/suffix = forced_by ? " FORCED by [forced_by]" : ""
-	log_message("[prefix]\"[message]\"[suffix]", message_type, log_globally=log_globally)
+	log_message("[prefix][custom_say_emote ? "*[custom_say_emote]*, " : ""]\"[message]\"[suffix]", message_type, log_globally=log_globally)
 
 /// Helper for logging of messages with only one sender and receiver
 /proc/log_directed_talk(atom/source, atom/target, message, message_type, tag)
@@ -1783,8 +1784,8 @@
 	filter_data = null
 	filters = null
 
-/atom/proc/intercept_zImpact(atom/movable/hitting_atom, levels = 1)
-	. |= SEND_SIGNAL(src, COMSIG_ATOM_INTERCEPT_Z_FALL, hitting_atom, levels)
+/atom/proc/intercept_zImpact(list/falling_movables, levels = 1)
+	. |= SEND_SIGNAL(src, COMSIG_ATOM_INTERCEPT_Z_FALL, falling_movables, levels)
 
 /// Sets the custom materials for an item.
 /atom/proc/set_custom_materials(list/materials, multiplier = 1)
@@ -1962,7 +1963,7 @@
 	if(!forced_gravity.len)
 		SEND_SIGNAL(gravity_turf, COMSIG_TURF_HAS_GRAVITY, src, forced_gravity)
 	if(forced_gravity.len)
-		var/max_grav
+		var/max_grav = forced_gravity[1]
 		for(var/i in forced_gravity)
 			max_grav = max(max_grav, i)
 		return max_grav
@@ -1991,7 +1992,6 @@
  * Override this if you want custom behaviour in whatever gets hit by the rust
  */
 /atom/proc/rust_heretic_act()
-	AddElement(/datum/element/rust)
 
 /**
  * Used to set something as 'open' if it's being used as a supplypod
@@ -2055,19 +2055,29 @@
  * Recursive getter method to return a list of all ghosts orbitting this atom
  *
  * This will work fine without manually passing arguments.
+ * * processed - The list of atoms we've already convered
+ * * source - Is this the atom for who we're counting up all the orbiters?
+ * * ignored_stealthed_admins - If TRUE, don't count admins who are stealthmoded and orbiting this
  */
-/atom/proc/get_all_orbiters(list/processed, source = TRUE)
+/atom/proc/get_all_orbiters(list/processed, source = TRUE, ignore_stealthed_admins = TRUE)
 	var/list/output = list()
-	if (!processed)
+	if(!processed)
 		processed = list()
-	if (src in processed)
+	else if(src in processed)
 		return output
-	if (!source)
+
+	if(!source)
 		output += src
+
 	processed += src
-	for (var/atom/atom_orbiter as anything in orbiters?.orbiter_list)
+	for(var/atom/atom_orbiter as anything in orbiters?.orbiter_list)
 		output += atom_orbiter.get_all_orbiters(processed, source = FALSE)
 	return output
+
+/mob/get_all_orbiters(list/processed, source = TRUE, ignore_stealthed_admins = TRUE)
+	if(!source && ignore_stealthed_admins && client?.holder?.fakekey)
+		return list()
+	return ..()
 
 /**
 * Instantiates the AI controller of this atom. Override this if you want to assign variables first.
@@ -2101,17 +2111,76 @@
 
 	return TRUE
 
-//Update the screentip to reflect what we're hoverin over
 /atom/MouseEntered(location, control, params)
-	. = ..()
-	// Statusbar
-	status_bar_set_text(usr, name)
+	SSmouse_entered.hovers[usr.client] = src
+
+/// Fired whenever this atom is the most recent to be hovered over in the tick.
+/// Preferred over MouseEntered if you do not need information such as the position of the mouse.
+/// Especially because this is deferred over a tick, do not trust that `client` is not null.
+/atom/proc/on_mouse_enter(client/client)
+	SHOULD_NOT_SLEEP(TRUE)
+
+	var/mob/user = client?.mob
+	if (isnull(user))
+		return
+
 	// Screentips
-	if(usr?.hud_used)
-		if(!usr.hud_used.screentips_enabled || (flags_1 & NO_SCREENTIPS_1))
-			usr.hud_used.screentip_text.maptext = ""
+	var/datum/hud/active_hud = user.hud_used
+	if(active_hud)
+		var/screentips_enabled = active_hud.screentips_enabled
+		if(screentips_enabled == SCREENTIP_PREFERENCE_DISABLED || (flags_1 & NO_SCREENTIPS_1))
+			active_hud.screentip_text.maptext = ""
 		else
-			usr.hud_used.screentip_text.maptext = MAPTEXT("<span style='text-align: center'><span style='font-size: 32px'><span style='color:[usr.hud_used.screentip_color]: 32px'>[name]</span>")
+			var/lmb_rmb_line = ""
+			var/ctrl_lmb_alt_lmb_line = ""
+			var/extra_context = ""
+
+			if (isliving(user) || isovermind(user))
+				var/obj/item/held_item = user.get_active_held_item()
+
+				if ((flags_1 & HAS_CONTEXTUAL_SCREENTIPS_1) || (held_item?.item_flags & ITEM_HAS_CONTEXTUAL_SCREENTIPS))
+					var/list/context = list()
+
+					var/contextual_screentip_returns = \
+						SEND_SIGNAL(src, COMSIG_ATOM_REQUESTING_CONTEXT_FROM_ITEM, context, held_item, user) \
+						| (held_item && SEND_SIGNAL(held_item, COMSIG_ITEM_REQUESTING_CONTEXT_FOR_TARGET, context, src, user))
+
+					if (contextual_screentip_returns & CONTEXTUAL_SCREENTIP_SET)
+						// LMB and RMB on one line...
+						var/lmb_text = (SCREENTIP_CONTEXT_LMB in context) ? "[SCREENTIP_CONTEXT_LMB]: [context[SCREENTIP_CONTEXT_LMB]]" : ""
+						var/rmb_text = (SCREENTIP_CONTEXT_RMB in context) ? "[SCREENTIP_CONTEXT_RMB]: [context[SCREENTIP_CONTEXT_RMB]]" : ""
+
+						if (lmb_text)
+							lmb_rmb_line = lmb_text
+							if (rmb_text)
+								lmb_rmb_line += " | [rmb_text]"
+						else if (rmb_text)
+							lmb_rmb_line = rmb_text
+
+						// Ctrl-LMB, Alt-LMB on one line...
+						if (lmb_rmb_line != "")
+							lmb_rmb_line += "<br>"
+						if (SCREENTIP_CONTEXT_CTRL_LMB in context)
+							ctrl_lmb_alt_lmb_line += "[SCREENTIP_CONTEXT_CTRL_LMB]: [context[SCREENTIP_CONTEXT_CTRL_LMB]]"
+						if (SCREENTIP_CONTEXT_ALT_LMB in context)
+							if (ctrl_lmb_alt_lmb_line != "")
+								ctrl_lmb_alt_lmb_line += " | "
+							ctrl_lmb_alt_lmb_line += "[SCREENTIP_CONTEXT_ALT_LMB]: [context[SCREENTIP_CONTEXT_ALT_LMB]]"
+
+						extra_context = "<br><span style='font-size: 7px'>[lmb_rmb_line][ctrl_lmb_alt_lmb_line]</span>"
+
+			if (screentips_enabled == SCREENTIP_PREFERENCE_CONTEXT_ONLY && extra_context == "")
+				active_hud.screentip_text.maptext = ""
+			else
+				//We inline a MAPTEXT() here, because there's no good way to statically add to a string like this
+				active_hud.screentip_text.maptext = "<span class='maptext' style='text-align: center; font-size: 32px; color: [active_hud.screentip_color]'>[name][extra_context]</span>"
+
+	///SKYRAT EDIT ADDITION BEGIN
+	// Face directions on combat mode. No procs, no typechecks, just a var for speed
+	if(user?.face_mouse)
+		user.face_atom(src)
+	///SKYRAT EDIT ADDITION END
+
 
 /// Gets a merger datum representing the connected blob of objects in the allowed_types argument
 /atom/proc/GetMergeGroup(id, list/allowed_types)

@@ -77,11 +77,6 @@
 	icon_file = 'icons/mob/clothing/under/color.dmi'
 	json_config = 'code/datums/greyscale/json_configs/jumpsuit_worn.json'
 
-/datum/greyscale_config/jumpsuit_worn_digi
-	name = "Worn Jumpsuit - Digitigrade"
-	icon_file = 'modular_skyrat/master_files/icons/mob/clothing/color_gags_digi.dmi'
-	json_config = 'code/datums/greyscale/json_configs/jumpsuit_worn.json'
-
 /datum/greyscale_config/jumpsuit_inhand_left
 	name = "Held Jumpsuit, Left"
 	icon_file = 'icons/mob/inhands/clothing_lefthand.dmi'
@@ -100,11 +95,6 @@
 /datum/greyscale_config/jumpsuit_prison_worn
 	name = "Worn Prison Jumpsuit"
 	icon_file = 'icons/mob/clothing/under/color.dmi'
-	json_config = 'code/datums/greyscale/json_configs/jumpsuit_prison_worn.json'
-
-/datum/greyscale_config/jumpsuit_prison_worn_digi
-	name = "Worn Prison Jumpsuit - Digitigrade"
-	icon_file = 'modular_skyrat/master_files/icons/mob/clothing/color_gags_digi.dmi'
 	json_config = 'code/datums/greyscale/json_configs/jumpsuit_prison_worn.json'
 
 /datum/greyscale_config/jumpsuit_prison_inhand_left
@@ -164,11 +154,6 @@
 	icon_file = 'icons/mob/clothing/feet.dmi'
 	json_config = 'code/datums/greyscale/json_configs/sneakers_worn.json'
 
-/datum/greyscale_config/sneakers_worn_digi
-	name = "Worn Sneakers - Digitigrade"
-	icon_file = 'modular_skyrat/master_files/icons/mob/clothing/feet_gags_digi.dmi'
-	json_config = 'code/datums/greyscale/json_configs/sneakers_worn.json'
-
 /datum/greyscale_config/sneakers_orange
 	name = "Orange Sneakers"
 	icon_file = 'icons/obj/clothing/shoes.dmi'
@@ -177,11 +162,6 @@
 /datum/greyscale_config/sneakers_orange_worn
 	name = "Worn Orange Sneakers"
 	icon_file = 'icons/mob/clothing/feet.dmi'
-	json_config = 'code/datums/greyscale/json_configs/sneakers_orange_worn.json'
-
-/datum/greyscale_config/sneakers_orange_worn_digi
-	name = "Worn Orange Sneakers - Digitigrade"
-	icon_file = 'modular_skyrat/master_files/icons/mob/clothing/feet_gags_digi.dmi'
 	json_config = 'code/datums/greyscale/json_configs/sneakers_orange_worn.json'
 
 /datum/greyscale_config/sneakers_wheelys
@@ -454,3 +434,25 @@
 	name = "Worn CTF Light Vest"
 	icon_file = 'icons/mob/clothing/suits/ctf.dmi'
 	json_config = 'code/datums/greyscale/json_configs/ctf_light_worn.json'
+
+/datum/greyscale_config/mothcoat
+	name = "Moth Coat"
+	icon_file = 'icons/obj/clothing/suits/moth.dmi'
+	json_config = 'code/datums/greyscale/json_configs/moth_coat.json'
+
+/datum/greyscale_config/mothcoat_worn
+	name = "Worn Moth Coat"
+	icon_file = 'icons/mob/clothing/suits/moth.dmi'
+	json_config = 'code/datums/greyscale/json_configs/moth_coat_worn.json'
+
+/datum/greyscale_config/mothcoat_winter
+	name = "Moth Winter Coat"
+	icon_file = 'icons/obj/clothing/suits/moth.dmi'
+	json_config = 'code/datums/greyscale/json_configs/moth_coat_winter.json'
+
+/datum/greyscale_config/mothcoat_winter_worn
+	name = "Worn Moth Winter Coat"
+	icon_file = 'icons/mob/clothing/suits/moth.dmi'
+	json_config = 'code/datums/greyscale/json_configs/moth_coat_winter_worn.json'
+
+

@@ -5,6 +5,7 @@
 	icon_state = "firstaid-mini"
 	lefthand_file = 'icons/mob/inhands/equipment/medical_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/medical_righthand.dmi'
+	slot_flags = ITEM_SLOT_BELT
 	throw_speed = 3
 	throw_range = 7
 	var/empty = FALSE
@@ -30,6 +31,15 @@
 	))
 	update_icon_state()
 	update_icon()
+
+
+/obj/item/storage/hypospraykit/Destroy()
+	for(var/obj/item in contents)
+		if(QDELING(loc))
+			if(item.resistance_flags & INDESTRUCTIBLE) // Because we're not supposed to delete stuff that are indestructible, but I'm too lazy to do something more complex upstream now. Later, maybe.
+				item.forceMove(get_turf(src))
+	. = ..()
+
 
 /obj/item/storage/hypospraykit/proc/populate_case_designs()
 	case_designs = list(
@@ -94,7 +104,7 @@
 /obj/item/storage/hypospraykit/cmo/PopulateContents()
 	if(empty)
 		return
-	new /obj/item/hypospray/mkii/CMO(src)
+	new /obj/item/hypospray/mkii/cmo(src)
 	new /obj/item/reagent_containers/glass/vial/large/multiver(src)
 	new /obj/item/reagent_containers/glass/vial/large/salglu(src)
 	new /obj/item/reagent_containers/glass/vial/large/synthflesh(src)

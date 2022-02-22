@@ -14,9 +14,11 @@
 					layer = "FRONT"
 				if(BODY_ADJ_LAYER)
 					layer = "ADJ"
+				if(BODY_FRONT_UNDER_CLOTHES)
+					layer = "FRONT"
 				else
 					layer = "BEHIND"
-			final_icon = icon(sprite_accessory.icon,"m_[key]_[sprite_accessory.icon_state]_[layer]", direction)
+			final_icon = icon(sprite_accessory.icon, "m_[key]_[sprite_accessory.icon_state]_[layer]", direction)
 		else
 			final_icon = icon('icons/mob/human_parts_greyscale.dmi', "lizard_chest_m", direction)
 

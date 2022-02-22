@@ -18,7 +18,7 @@
 	STR.max_combined_w_class = 21
 	STR.set_holdable(list(
 						//toys
-						/obj/item/clothing/sextoy/signalvib,
+						/obj/item/clothing/sextoy/eggvib/signalvib,
 						/obj/item/clothing/sextoy/buttplug,
 						/obj/item/clothing/sextoy/nipple_clamps,
 						/obj/item/clothing/sextoy/eggvib,
@@ -42,8 +42,7 @@
 
 						//clothing
 						/obj/item/clothing/mask/ballgag,
-						/obj/item/clothing/mask/ballgag/phallic,
-						/obj/item/clothing/mask/ballgag/phallic/kazoo,
+						/obj/item/clothing/mask/ballgag/choking,
 						/obj/item/clothing/head/domina_cap,
 						/obj/item/clothing/head/maid,
 						/obj/item/clothing/glasses/blindfold/kinky,

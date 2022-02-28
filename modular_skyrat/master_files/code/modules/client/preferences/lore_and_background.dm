@@ -46,7 +46,7 @@
 		if(TRUE && "Uneducated", "Underemployed")
 			message_admins("[target],[value],[target.payday_modifier]\n")
 			if(value == "Uneducated")
-				ADD_TRAIT(target, TRAIT_DUMB, INNATE_TRAIT) // placeholder
+				ADD_TRAIT(target, TRAIT_DUMB, TRAUMA_TRAIT) // placeholder
 			target.payday_modifier -= RATE_1_REDUCTION
 			message_admins("[target],[value],[target.payday_modifier]\n")
 
@@ -150,6 +150,7 @@
 		if(TRUE && PRODIGY)
 			message_admins("[target],[value],[target.payday_modifier]\n")
 			target.payday_modifier -= RATE_3_REDUCTION // Todo, trait here.
+			target.add_quirk(/datum/quirk/item_quirk/family_heirloom/prodigy)
 			message_admins("[target],[value],[target.payday_modifier]\n")
 		if(TRUE && FAVORED)
 			message_admins("[target],[value],[target.payday_modifier]\n")
@@ -163,6 +164,41 @@
 /datum/preference/choiced/social_status/create_default_value()
 	return NORMAL
 
+/datum/quirk/item_quirk/family_heirloom/prodigy //based off family heirloom
+	name = "Fancy Diploma"
+	desc = "You own a very fancy diploma and bring it everywhere! You have to keep it safe!"
+	medical_record_text = "Patient is obsessed with learning."
+
+/datum/quirk/item_quirk/family_heirloom/prodigy/add_unique()
+	var/mob/living/carbon/human/human_holder = quirk_holder
+	var/obj/item/heirloom_type
+
+
+	if(!heirloom_type)
+		heirloom_type = /obj/item/fancy_diploma
+
+	var/obj/new_heirloom = new heirloom_type(get_turf(human_holder))
+	new_heirloom.desc = "A fancy diploma stating that [human_holder] has graduated from a prestigious school. " // This doesn't work right.
+	heirloom = WEAKREF(new_heirloom)
+	give_item_to_holder(
+		new_heirloom,
+		list(
+			LOCATION_LPOCKET = ITEM_SLOT_LPOCKET,
+			LOCATION_RPOCKET = ITEM_SLOT_RPOCKET,
+			LOCATION_BACKPACK = ITEM_SLOT_BACKPACK,
+			LOCATION_HANDS = ITEM_SLOT_HANDS,
+		),
+		flavour_text = "This is your precious education credential, keep it safe!",
+
+	)
+
+/obj/item/fancy_diploma
+	name = "Official Diploma"
+	icon = 'icons/obj/wizard.dmi'
+	icon_state = "scroll2"
+
+/obj/item/fancy_diploma/Initialize(mapload)
+	. = ..()
 
 /mob/living/carbon/human
 	var/payday_modifier = 1

@@ -5,10 +5,10 @@ export const feature_education: Feature<string> = {
   component: FeatureDropdownInput,
 };
 export const feature_origin: Feature<string> = {
-  name: "Faction",
+  name: "Origins",
   component: FeatureDropdownInput,
 };
 export const feature_social_status: Feature<string> = {
-  name: "Homeworld",
+  name: "Social Status",
   component: FeatureDropdownInput,
 };

@@ -202,3 +202,5 @@
 
 /mob/living/carbon/human
 	var/payday_modifier = 1
+/mob/living
+	var/risk_increased

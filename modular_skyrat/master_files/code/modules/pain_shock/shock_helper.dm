@@ -16,12 +16,12 @@
 	injuries = calc_injuries()
 //		var/pain_score = injuries + length(all_wounds) // old, backup and sketchy
 	calc_pain()
-	if(stat == DEAD)
+	if(stat == DEAD) // If we die, we ded. Stop here. Make us look dead.
 		flow_rate = 0
 		update_health_hud()
 		return
-	else if(!in_shock)	flow_rate = clamp(rand(BASE_FLOW_RATE, BASE_FLOW_RATE_UPPER) + calc_pain(), 0, FLOW_RATE_ARREST)
-	in_shock ? shock_dying(flow_rate) : shock_helper(flow_rate)
+	else if(!in_shock)	flow_rate = clamp(rand(BASE_FLOW_RATE, BASE_FLOW_RATE_UPPER) + calc_pain(), 0, FLOW_RATE_ARREST) // Normal Flow tasks
+	in_shock ? shock_dying(flow_rate) : shock_helper(flow_rate) // Handling thresholds, going into our shock.
 
 	update_health_hud()
 
@@ -48,29 +48,29 @@
 		return
 	if(can_leave_shock(last_bpm) && stat != DEAD)
 		in_shock = FALSE
-		set_stat(CONSCIOUS)
-		to_chat(src, span_hypnophrase("You body tingles painfully as your nerves come back..."))
+		pre_stat()
+		to_chat(src, span_hypnophrase("You body tingles painfully as your nerves come back...")) // Like that feeling you get when your nerves are pressurized IRL
 	else
 		current_pain_message_helper("Shock")
-		losebreath += 0.25
+		losebreath += 0.25 // Let's speed this up if we're actively taking damage still
 	flow_rate = clamp(flow_rate - losebreath, FLOW_RATE_DEAD, FLOW_RATE_ARREST) // Double negative when in crit?
 
-	if(flow_rate <= 0)
-		adjustOrganLoss(ORGAN_SLOT_BRAIN, losebreath)
+	if(flow_rate <= 0 && getOrganLoss(ORGAN_SLOT_BRAIN) >= BRAIN_DAMAGE_DEATH) // Let us die once!
+		adjustOrganLoss(ORGAN_SLOT_BRAIN, (injuries ? (losebreath + (injuries / 2)) : losebreath))
 
 
 /mob/living/carbon/proc/can_leave_shock(last_bpm)
 	var/truepain = calc_pain()
-	if(truepain <= 100)
+	if(truepain <= 100) // When our pain is below a certain threshold, we're free to leave shock. Like 4 minor wounds, 3 major as of writing.
 		return TRUE
 	return FALSE
 /mob/living/carbon/proc/resetpainmsg()
-	lastpainmessage = null
+	lastpainmessage = null // refactor this lmao
 /mob/living/carbon/proc/current_pain_message_helper(current_pain)
 	if(lastpainmessage)
 		return
 	lastpainmessage = TRUE
-	addtimer(CALLBACK(src, .proc/resetpainmsg), 45 SECONDS)
+	addtimer(CALLBACK(src, .proc/resetpainmsg), 45 SECONDS) // *sweatdrops
 	var/list/close2death = list("a human", "a moth", "a felinid", "a lizard", "a particularly resilient slime", "a syndicate agent", "a clown", "a mime", "a mortal foe", "an innocent bystander")
 
 	switch(current_pain)
@@ -97,16 +97,18 @@
 
 /mob/living/carbon/proc/shock_helper(flow_rate)
 	SIGNAL_HANDLER
+	if(stat == DEAD)
+		return
 	switch(flow_rate)
 		if(FLOW_RATE_ARREST)
 			if(stat != HARD_CRIT || stat != SOFT_CRIT && !HAS_TRAIT(src, TRAIT_NOSOFTCRIT))
-				set_stat(SOFT_CRIT)
+				pre_stat()
 				to_chat(src, "shock_helper made us [SOFT_CRIT]")
 				in_shock = TRUE
 //				shock_dying(flow_rate, pulsetimer)
 				current_pain_message_helper("Soft-crit")
 			if(calc_pain() > hardcrit_threshold || stat != HARD_CRIT && !HAS_TRAIT(src, TRAIT_NOHARDCRIT)) // testing..
-				set_stat(HARD_CRIT)
+				pre_stat()
 				to_chat(src, "shock_helper made us [HARD_CRIT]")
 				in_shock = TRUE
 				current_pain_message_helper("Dying")
@@ -186,19 +188,17 @@
 
 	if(!beepvalid || !patient)
 		return
-	switch(patient.flow_rate)
-		if(0 to 60)
+	if(patient?.in_shock && DT_PROB(50, 3))
+		patient.flow_rate ? say("Patient critical! Pulse rate at [patient.flow_rate] BPM, vital signs fading!") : say("Excessive heartbeat! Possible Shock Detected! Pulse rate at [patient.flow_rate] BPM.")
+	switch(patient?.flow_rate)
+		if(0 to 60 && !patient?.in_shock)
 			playsound(src, 'modular_skyrat/sound/effects/flatline.ogg', 20)
-		if(60 to 90)
+		if(60 to 90 && !patient?.in_shock)
 			playsound(src, 'modular_skyrat/sound/effects/quiet_beep.ogg', 40)
-		if(90 to 130)
+		if(90 to 170 && !patient?.in_shock)
 			playsound(src, 'modular_skyrat/sound/effects/quiet_double_beep.ogg', 40)
-		if(130 to FLOW_RATE_ARREST)
-			playsound(src, pick('modular_skyrat/sound/effects/ekg_alert.ogg', 'modular_skyrat/sound/effects/flatline.ogg'), 40)
-			patient.stat ? say("Patient critical! Pulse rate at [patient.flow_rate] BPM, vital signs fading!") : say("Excessive heartbeat! Possible Shock Detected! Pulse rate at [patient.flow_rate] BPM.")
-
 		else
-			playsound(src, 'modular_skyrat/sound/effects/flatline.ogg', 20)
+			patient.flow_rate ? playsound(src, ('modular_skyrat/sound/effects/ekg_alert.ogg')) : playsound(src, ('modular_skyrat/sound/effects/flatline.ogg'))
 	if(beepvalid)
 		addtimer(CALLBACK(src, .proc/ekg, patient), 2 SECONDS) // SFX length
 		if(patient.stat != DEAD)

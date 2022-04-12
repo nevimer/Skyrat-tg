@@ -1947,8 +1947,6 @@
 	. = ..()
 	if(isnull(.))
 		return
-	if(iscarbon(src))// SKYRAT EDIT: //handle this on our code.
-		return // SKYRAT EDIT: //handle this on our code.
 	switch(.) //Previous stat.
 		if(CONSCIOUS)
 			if(stat >= UNCONSCIOUS)

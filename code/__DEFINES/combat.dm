@@ -68,9 +68,9 @@
 #define GODMODE (1<<4)
 
 //Health Defines
-#define HEALTH_THRESHOLD_CRIT 0
-#define HEALTH_THRESHOLD_FULLCRIT -80 // SKYRAT EDIT
-#define HEALTH_THRESHOLD_DEAD -180 // SKYRAT EDIT
+#define HEALTH_THRESHOLD_CRIT -INFINITY // SKYRAT EDIT
+#define HEALTH_THRESHOLD_FULLCRIT -INFINITY // SKYRAT EDIT
+#define HEALTH_THRESHOLD_DEAD -INFINITY // SKYRAT EDIT
 
 #define HEALTH_THRESHOLD_NEARDEATH -90 //Not used mechanically, but to determine if someone is so close to death they hear the other side
 

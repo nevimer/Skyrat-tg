@@ -30,7 +30,7 @@
 	for(var/i in all_wounds)
 		var/datum/wound/iterwound = i
 		if(iterwound.severity == WOUND_SEVERITY_SEVERE || WOUND_SEVERITY_CRITICAL || WOUND_SEVERITY_LOSS)
-			pain_score += SHOCK_STAGE_MODERATE
+			pain_score += SHOCK_STAGE_MAJOR
 		if(iterwound.severity == WOUND_SEVERITY_MODERATE || WOUND_SEVERITY_TRIVIAL)
 			pain_score += SHOCK_STAGE_MINOR
 
@@ -52,7 +52,7 @@
 		to_chat(src, span_hypnophrase("You body tingles painfully as your nerves come back...")) // Like that feeling you get when your nerves are pressurized IRL
 	else
 		current_pain_message_helper("Shock")
-		losebreath += 0.25 // Let's speed this up if we're actively taking damage still
+		losebreath += 0.1 // Let's speed this up if we're actively taking damage still
 	flow_rate = clamp(flow_rate - losebreath, FLOW_RATE_DEAD, FLOW_RATE_ARREST) // Double negative when in crit?
 
 	if(flow_rate <= 0 && getOrganLoss(ORGAN_SLOT_BRAIN) >= BRAIN_DAMAGE_DEATH) // Let us die once!

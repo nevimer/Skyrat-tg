@@ -1,4 +1,4 @@
-/mob/living/carbon/set_stat(new_stat)
+/* /mob/living/carbon/set_stat(new_stat)
 	if(new_stat == stat)
 		return
 	. = stat
@@ -35,7 +35,7 @@
 		if(HARD_CRIT)
 			. = ..()
 		if(DEAD)
-			if(should_be_dead())	. = ..()
+			if(should_be_dead())	. = ..() */
 /*
 	if(. == DEAD || new_stat == DEAD) // insurance
 		. = ..()
@@ -96,7 +96,6 @@
 	if(health <= hardcrit_threshold || stat != DEAD)
 		answer = TRUE
 	if(new_stat == SOFT_CRIT || new_stat == HARD_CRIT || new_stat == DEAD)
-		to_chat(src, "Ya??")
 		answer = TRUE
 	return answer
 /mob/living/carbon/proc/should_be_dead()

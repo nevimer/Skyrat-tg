@@ -310,6 +310,8 @@
 	//Antagonists
 	parts += antag_report()
 
+	parts += security_report() // SKYRAT EDIT ADDITION
+
 	parts += opfor_report() //SKYRAT EDIT ADDITION
 
 	parts += hardcore_random_report()

@@ -34,7 +34,7 @@ GLOBAL_LIST_INIT(armament_entries, build_armament_list())
 		// ditto for the description
 		spawned_armament_entry.description ||= initial(spawned_armament_entry.item_type.desc)
 		// Make our icon cache for the UI.
-		spawned_armament_entry.create_icon_cache()
+		spawned_armament_entry.setup()
 		// Now that we've set up our datum, we can add it to the correct category
 		if(spawned_armament_entry.category)
 			if(spawned_armament_entry.subcategory)
@@ -70,9 +70,10 @@ GLOBAL_LIST_INIT(armament_entries, build_armament_list())
 				armament_dataset[ARMAMENT_CATEGORY_STANDARD][CATEGORY_ENTRY][ARMAMENT_SUBCATEGORY_NONE] += spawned_armament_entry
 	return armament_dataset
 
-//////////////////////
-// ARMAMENT ENTRIES //
-//////////////////////
+/*
+*	ARMAMENT ENTRIES
+*/
+
 /datum/armament_entry
 	/// The name of the equipment used in the listing, if not set, it will use the items name.
 	var/name
@@ -94,9 +95,19 @@ GLOBAL_LIST_INIT(armament_entries, build_armament_list())
 	var/cached_base64
 	/// The maximum amount of this item that can be equipped.
 	var/max_purchase = 1
+	/// Do we have magazines for purchase?
+	var/magazine
+	/// If we have a magazine, how much is it?
+	var/magazine_cost = 1
+	/// Is this restricted for purchase in some form? Requires extra code in the vendor to function, used for guncargo.
+	var/restricted = FALSE
 
-/datum/armament_entry/proc/create_icon_cache() // TODO: Make this use overlays.
+/datum/armament_entry/proc/setup() // TODO: Make this use overlays.
 	var/obj/item/test_item = new item_type()
+	if(istype(test_item, /obj/item/gun/ballistic))
+		var/obj/item/gun/ballistic/ballistic_test = test_item
+		if(!ballistic_test.internal_magazine)
+			magazine = ballistic_test.mag_type
 	cached_base64 = icon2base64(getFlatIcon(test_item, no_anim = TRUE))
 	qdel(test_item)
 

@@ -64,55 +64,6 @@
 		adjust_mask(usr)
 
 
-
-/obj/item/clothing/mask/bandana/red/ft
-	name = "skin tight red bandana"
-	desc = "A fine red bandana with nanotech lining."
-	flags_cover = NONE
-	flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_cover = PEPPERPROOF
-
-/obj/item/clothing/mask/bandana/blue/ft
-	name = "skin tight blue bandana"
-	desc = "A fine blue bandana with nanotech lining."
-	flags_cover = NONE
-	flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_cover = PEPPERPROOF
-
-/obj/item/clothing/mask/bandana/green/ft
-	name = "skin tight green bandana"
-	desc = "A fine green bandana with nanotech lining."
-	flags_cover = NONE
-	flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_cover = PEPPERPROOF
-
-/obj/item/clothing/mask/bandana/gold/ft
-	name = "skin tight gold bandana"
-	desc = "A fine gold bandana with nanotech lining."
-	flags_cover = NONE
-	flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_cover = PEPPERPROOF
-
-/obj/item/clothing/mask/bandana/black/ft
-	name = "skin tight black bandana"
-	desc = "A fine black bandana with nanotech lining."
-	flags_cover = NONE
-	flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_cover = PEPPERPROOF
-
-/obj/item/clothing/mask/bandana/skull/ft
-	name = "skin tight skull bandana"
-	desc = "A fine black bandana with nanotech lining and a skull emblem."
-	flags_cover = NONE
-	flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_inv = HIDEFACIALHAIR|HIDESNOUT
-	visor_flags_cover = PEPPERPROOF
-
 /obj/item/clothing/mask/balaclava/threehole
 	name = "three hole balaclava"
 	desc = "Tiocfaidh ar la."
@@ -128,8 +79,6 @@
 	worn_icon = 'modular_skyrat/master_files/icons/mob/clothing/mask.dmi'
 	icon_state = "swatclavam"
 	inhand_icon_state = "balaclava"
-
-
 
 /obj/item/clothing/mask/gas/german
 	name = "black gas mask"

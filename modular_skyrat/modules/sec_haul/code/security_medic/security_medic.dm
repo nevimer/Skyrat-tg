@@ -17,7 +17,7 @@
 	outfit = /datum/outfit/job/security_medic
 	plasmaman_outfit = /datum/outfit/plasmaman/security
 
-	paycheck = PAYCHECK_MEDIUM
+	paycheck = PAYCHECK_CREW
 	paycheck_department = ACCOUNT_SEC
 
 	mind_traits = list(TRAIT_DONUT_LOVER)
@@ -44,16 +44,11 @@
 	rpg_title = "Battle Cleric"
 	job_flags = JOB_ANNOUNCE_ARRIVAL | JOB_CREW_MANIFEST | JOB_EQUIP_RANK | JOB_CREW_MEMBER | JOB_NEW_PLAYER_JOINABLE | JOB_REOPEN_ON_ROUNDSTART_LOSS | JOB_ASSIGN_QUIRKS | JOB_CAN_BE_INTERN
 
-/datum/job/security_medic/after_spawn(mob/living/carbon/human/H, mob/M)
-	. = ..()
-	to_chat(M, span_redtext("As the Security Medic, you are comparable in medical knowledge to a Paramedic, not a one man surgical bay. \
-	your main duty is healing on the field or in combat situations. Leave revivals and chemistry work to trained professionals."))
-
 /datum/outfit/job/security_medic
 	name = "Security Medic"
 	jobtype = /datum/job/security_medic
 
-	belt = /obj/item/pda/security
+	belt = /obj/item/modular_computer/tablet/pda/security
 	ears = /obj/item/radio/headset/headset_medsec
 	uniform = /obj/item/clothing/under/rank/security/peacekeeper/security_medic
 	gloves = /obj/item/clothing/gloves/color/latex/nitrile
@@ -62,7 +57,10 @@
 	suit = /obj/item/clothing/suit/armor/vest/peacekeeper/security_medic
 	l_hand = /obj/item/storage/medkit/brute
 	head = /obj/item/clothing/head/beret/sec/peacekeeper/security_medic
-	backpack_contents = list(/obj/item/gun/energy/disabler = 1)
+	backpack_contents = list(
+		/obj/item/storage/box/gunset/firefly = 1,
+		/obj/item/summon_beacon/secmed = 1,
+		)
 	backpack = /obj/item/storage/backpack/security
 	satchel = /obj/item/storage/backpack/satchel/sec
 	duffelbag = /obj/item/storage/backpack/duffelbag/sec
@@ -72,6 +70,10 @@
 	implants = list(/obj/item/implant/mindshield)
 
 	id_trim = /datum/id_trim/job/security_medic
+
+/obj/effect/landmark/start/security_officer/Initialize(mapload)
+	. = ..()
+	new /obj/effect/landmark/start/security_medic(get_turf(src))
 
 /obj/effect/landmark/start/security_medic
 	name = "Security Medic"
@@ -110,5 +112,5 @@
 	new /obj/item/clothing/suit/straight_jacket(src)
 	new /obj/item/storage/belt/medical(src)
 	new /obj/item/storage/belt/security/medic/full(src)
-	new /obj/item/clothing/under/rank/medical/doctor/red(src)
+	new /obj/item/clothing/under/rank/medical/scrubs/skyrat/red/sec(src)
 	new /obj/item/clothing/under/rank/security/peacekeeper/security_medic/alternate

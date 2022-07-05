@@ -6,7 +6,7 @@
 	strip_delay = 100
 	can_adjust = FALSE
 	body_parts_covered = NONE
-	mutant_variants = STYLE_DIGITIGRADE|STYLE_TAUR_ALL
+	supports_variations_flags = CLOTHING_DIGITIGRADE_VARIATION|STYLE_TAUR_ALL
 	item_flags = DROPDEL
 	greyscale_colors = "#bd8fcf"
 	has_sensor = NO_SENSORS
@@ -154,8 +154,8 @@
 	if(!hooman?.dna?.mutant_bodyparts["taur"])
 		slowdown = 0
 		return ..()
-	var/datum/sprite_accessory/taur/S = GLOB.sprite_accessories["taur"][hooman.dna.species.mutant_bodyparts["taur"][MUTANT_INDEX_NAME]]
-	if(S.hide_legs)
+	var/datum/sprite_accessory/taur/taur_accessory = GLOB.sprite_accessories["taur"][hooman.dna.species.mutant_bodyparts["taur"][MUTANT_INDEX_NAME]]
+	if(taur_accessory.hide_legs)
 		slowdown = 4
 	else
 		slowdown = 0

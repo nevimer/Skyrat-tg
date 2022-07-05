@@ -26,7 +26,8 @@
 	var/spawn_text = "Your mission is to assault NTSS13 and get all of the GoldenEye keys that you can from the heads of staff that reside there. \
 	Use your pinpointer to locate these after you have extracted the GoldenEye key from the head of staff. It will be sent in by droppod. \
 	You must then upload the key to the GoldenEye upload terminal on this GoldenEye station. After you have completed your mission, \
-	The GoldenEye defence network will fall, and we will gain access to Nanotrasen's military systems. Good luck agent."
+	The GoldenEye defence network will fall, and we will gain access to Nanotrasen's military systems. Good luck agent. \
+	YOUR PRESENCE WILL BE ANNOUNCED IN APPROXEMATELY 15 MINUTES."
 	/// A link to our internal pinpointer.
 	var/datum/status_effect/goldeneye_pinpointer/pinpointer
 
@@ -47,12 +48,12 @@
 	owner.announce_objectives()
 
 /datum/antagonist/assault_operative/on_gain()
-	give_alias()
 	. = ..()
 	equip_operative()
 	forge_objectives()
 	if(send_to_spawnpoint)
 		move_to_spawnpoint()
+	give_alias()
 
 /datum/antagonist/assault_operative/create_team(datum/team/assault_operatives/new_team)
 	if(!new_team)
@@ -159,7 +160,7 @@
 	for(var/obj/item/item in human_target.get_equipped_items(TRUE))
 		qdel(item)
 
-	var/obj/item/organ/brain/human_brain = human_target.getorganslot(BRAIN)
+	var/obj/item/organ/internal/brain/human_brain = human_target.getorganslot(BRAIN)
 	human_brain.destroy_all_skillchips() // get rid of skillchips to prevent runtimes
 	human_target.equipOutfit(assault_operative_default_outfit)
 	human_target.regenerate_icons()

@@ -117,6 +117,7 @@
 	chameleon_action.chameleon_type = /obj/item/storage/belt
 	chameleon_action.chameleon_name = "Belt"
 	chameleon_action.initialize_disguises()
+	add_item_action(chameleon_action)
 
 /obj/item/storage/belt/holster/chameleon/ComponentInitialize()
 	. = ..()
@@ -149,7 +150,7 @@
 		/obj/item/ammo_box/a357,
 		/obj/item/ammo_box/a762,
 		/obj/item/ammo_box/magazine/toy/pistol,
-		/obj/item/gun/energy/kinetic_accelerator/crossbow,
+		/obj/item/gun/energy/recharge/ebow,
 		/obj/item/gun/energy/e_gun/mini,
 		/obj/item/gun/energy/disabler,
 		/obj/item/gun/energy/dueling

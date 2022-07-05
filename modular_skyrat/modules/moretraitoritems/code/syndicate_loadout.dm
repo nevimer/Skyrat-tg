@@ -1,7 +1,6 @@
 
 /obj/item/storage/box/syndie_kit/spaceassassin/PopulateContents()
 	new /obj/item/knife/combat(src)
-	new	/obj/item/book/granter/traitsr/ventcrawl_book(src)
 	switch(pick(list("red", "green", "dgreen", "blue", "orange", "black")))
 		if("green")
 			new /obj/item/clothing/head/helmet/space/syndicate/green(src)
@@ -52,7 +51,7 @@
 	new /obj/item/chameleon(src)
 
 /obj/item/storage/backpack/duffelbag/syndie/loadout/stealthop/PopulateContents()
-	new /obj/item/gun/energy/kinetic_accelerator/crossbow(src)
+	new /obj/item/gun/energy/recharge/ebow(src)
 	new /obj/item/pen/sleepy(src)
 	new /obj/item/healthanalyzer/rad_laser(src)
 	new /obj/item/chameleon(src)
@@ -120,7 +119,7 @@
 	new /obj/item/clothing/suit/hooded/chaplain_hoodie(src)
 	new /obj/item/card/id/advanced/chameleon(src)
 	new /obj/item/clothing/shoes/chameleon/noslip(src)
-	new /obj/item/book/granter/spell/summonitem(src)
+	new /obj/item/book/granter/action/spell/summonitem(src)
 
 /obj/item/storage/box/syndie_kit/loadout/hunter/PopulateContents()
 	new /obj/item/gun/ballistic/rifle/boltaction/harpoon(src)
@@ -131,7 +130,7 @@
 
 /obj/item/storage/box/syndie_kit/loadout/bee/PopulateContents()
 	new /obj/item/clothing/suit/hooded/bee_costume(src)
-	new /obj/item/clothing/mask/animal/rat/bee(src)
+	new /obj/item/clothing/mask/animal/small/bee(src)
 	new /obj/item/storage/belt/fannypack/yellow(src)
 	new /obj/item/grenade/spawnergrenade/buzzkill(src)
 	new /obj/item/grenade/spawnergrenade/buzzkill(src)
@@ -222,7 +221,7 @@
 	new /obj/item/ammo_box/a357(src)
 	new /obj/item/ammo_box/a357(src)
 	new /obj/item/ammo_box/a357(src)
-	new /obj/item/pda/heads(src)
+	new /obj/item/modular_computer/tablet/pda/heads(src)
 	new /obj/item/clipboard(src)
 	new /obj/item/card/id/advanced/chameleon/impostorsr(src)
 	new /obj/item/stamp/centcom(src)

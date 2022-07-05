@@ -8,7 +8,7 @@
 	/// List of what the contractor's purchased
 	var/list/purchased_items = list()
 	/// Static of contractor_item subtypes
-	var/static/list/contractor_items = subtypesof(/datum/contractor_item)
+	var/static/list/contractor_items = typecacheof(/datum/contractor_item, ignore_root_path = TRUE)
 	/// Reference to the current contract datum
 	var/datum/syndicate_contract/current_contract
 	/// List of all contract datums the contractor has available
@@ -21,6 +21,8 @@
 	var/contract_paid_out = 0
 	/// Amount of TC that has yet to be redeemed
 	var/contract_TC_to_redeem = 0
+	/// Current index number for contract IDs
+	var/start_index = 1
 
 /// Generates a list of all valid hub items to set for purchase
 /datum/contractor_hub/proc/create_hub_items()
@@ -54,7 +56,6 @@
 	to_generate = shuffle(to_generate)
 
 	// Support contract generation happening multiple times
-	var/start_index = 1
 	if (length(assigned_contracts))
 		start_index = length(assigned_contracts) + 1
 
@@ -76,7 +77,16 @@
 		start_index++
 
 	// If the threshold for TC payouts isn't reached, boost the lowest paying contract
-	if (total < LOWEST_TC)
+	if ((total < LOWEST_TC) && lowest_paying_contract)
 		lowest_paying_contract.contract.payout_bonus += (LOWEST_TC - total)
 
 #undef LOWEST_TC
+
+/datum/contractor_hub/proc/create_single_contract(datum/mind/owner, contract_payout_tier)
+	var/datum/syndicate_contract/contract_to_add = new(owner, assigned_targets, contract_payout_tier)
+
+	assigned_targets.Add(contract_to_add.contract.target)
+
+	contract_to_add.id = start_index
+	assigned_contracts.Add(contract_to_add)
+	start_index++

@@ -45,7 +45,6 @@
 			var/datum/addiction/addiction = SSaddiction.all_addictions[key]
 			addiction.process_addiction(src, delta_time, times_fired)
 	if(stat != DEAD)
-		flow_control() // SKYRAT EDIT ADDITION: Flow Rate, if this is not here stamina breaks and you die many times over.
 		return 1
 
 ///////////////

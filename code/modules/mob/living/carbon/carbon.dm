@@ -652,8 +652,8 @@
 	if(!client)
 		return
 
-	if(stat != CONSCIOUS) // SKYRAT EDIT: Pain system
-		var/severity = 1 // SKYRAT EDIT
+	if(health <= crit_threshold)
+		var/severity = 0
 		switch(health)
 			if(-20 to -10)
 				severity = 1
@@ -677,18 +677,18 @@
 				severity = 10
 		if(stat != HARD_CRIT)
 			var/visionseverity = 4
-			switch(flow_rate) // SKYRAT EDIT START - Health System
-				if(300 to 150)
+			switch(health)
+				if(-8 to -4)
 					visionseverity = 5
-				if(150 to 130)
+				if(-12 to -8)
 					visionseverity = 6
-				if(130 to 110)
+				if(-16 to -12)
 					visionseverity = 7
-				if(110 to 60)
+				if(-20 to -16)
 					visionseverity = 8
-				if(60 to 30)
+				if(-24 to -20)
 					visionseverity = 9
-				if(30 to -INFINITY) // SKYRAT EDIT END
+				if(-INFINITY to -24)
 					visionseverity = 10
 			overlay_fullscreen("critvision", /atom/movable/screen/fullscreen/crit/vision, visionseverity)
 		else
@@ -721,7 +721,7 @@
 		clear_fullscreen("oxy")
 
 	//Fire and Brute damage overlay (BSSR)
-/* 	var/hurtdamage = getBruteLoss() + getFireLoss() + damageoverlaytemp // SKYRAT EDIT: MOVED TO MODULAR
+	var/hurtdamage = getBruteLoss() + getFireLoss() + damageoverlaytemp
 	if(hurtdamage)
 		var/severity = 0
 		switch(hurtdamage)
@@ -739,10 +739,10 @@
 				severity = 6
 		overlay_fullscreen("brute", /atom/movable/screen/fullscreen/brute, severity)
 	else
-		clear_fullscreen("brute") */
+		clear_fullscreen("brute")
 
-///mob/living/carbon/update_health_hud(shown_health_amount) //SKYRAT EDIT: MOVED TO MODULAR
-/* 	if(!client || !hud_used)
+/mob/living/carbon/update_health_hud(shown_health_amount)
+	if(!client || !hud_used)
 		return
 	if(hud_used.healths)
 		if(stat != DEAD)
@@ -764,7 +764,7 @@
 			else
 				hud_used.healths.icon_state = "health6"
 		else
-			hud_used.healths.icon_state = "health7" */
+			hud_used.healths.icon_state = "health7"
 
 /mob/living/carbon/update_stamina_hud(shown_stamina_amount)
 	if(!client || !hud_used?.stamina)
@@ -817,17 +817,17 @@
 	if(status_flags & GODMODE)
 		return
 	if(stat != DEAD)
-		if(health <= HEALTH_THRESHOLD_DEAD && !HAS_TRAIT(src, TRAIT_NODEATH)) // SKYRAT EDIT BEGIN: HEALTH REWORK
-//			death()
+		if(health <= HEALTH_THRESHOLD_DEAD && !HAS_TRAIT(src, TRAIT_NODEATH))
+			death()
 			return
-//		if(health <= hardcrit_threshold && !HAS_TRAIT(src, TRAIT_NOHARDCRIT))
-//			set_stat(HARD_CRIT)*/
-	if(HAS_TRAIT(src, TRAIT_KNOCKEDOUT))
-		set_stat(UNCONSCIOUS)
-/* 		else if(health <= crit_threshold && !HAS_TRAIT(src, TRAIT_NOSOFTCRIT))
-			set_stat(SOFT_CRIT) */
-	else
-		set_stat(CONSCIOUS) // SKYRAT EDIT END
+		if(health <= hardcrit_threshold && !HAS_TRAIT(src, TRAIT_NOHARDCRIT))
+			set_stat(HARD_CRIT)
+		else if(HAS_TRAIT(src, TRAIT_KNOCKEDOUT))
+			set_stat(UNCONSCIOUS)
+		else if(health <= crit_threshold && !HAS_TRAIT(src, TRAIT_NOSOFTCRIT))
+			set_stat(SOFT_CRIT)
+		else
+			set_stat(CONSCIOUS)
 	update_damage_hud()
 	update_health_hud()
 	update_stamina_hud()

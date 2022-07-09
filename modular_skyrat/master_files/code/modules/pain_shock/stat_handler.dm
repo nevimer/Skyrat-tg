@@ -91,7 +91,7 @@
 		add_to_dead_mob_list()
 /mob/living/carbon/proc/should_be_critical(new_stat)
 	var/answer = FALSE
-	if(in_shock)
+	if(falling_apart)
 		answer = TRUE
 	if(health <= hardcrit_threshold || stat != DEAD)
 		answer = TRUE
@@ -99,7 +99,7 @@
 		answer = TRUE
 	return answer
 /mob/living/carbon/proc/should_be_dead()
-	if(flow_rate <= FLOW_RATE_DEAD && getOrganLoss(ORGAN_SLOT_BRAIN) >= BRAIN_DAMAGE_DEATH)
+	if(my_heart.flow_rate <= FLOW_RATE_DEAD && getOrganLoss(ORGAN_SLOT_BRAIN) >= BRAIN_DAMAGE_DEATH)
 		return TRUE
 /mob/living/carbon/proc/pre_stat()
 	if(should_be_critical() && !should_be_dead())

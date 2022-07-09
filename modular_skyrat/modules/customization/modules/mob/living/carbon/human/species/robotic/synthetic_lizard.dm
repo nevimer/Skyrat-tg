@@ -27,6 +27,7 @@
 		BODY_ZONE_L_LEG = /obj/item/bodypart/l_leg/robot/mutant/lizard,
 		BODY_ZONE_R_LEG = /obj/item/bodypart/r_leg/robot/mutant/lizard,
 	)
+	mutantbrain = /obj/item/organ/internal/brain/ipc_positron/synthliz
 
 /datum/species/robotic/synthliz/get_random_body_markings(list/passed_features)
 	var/name = pick("Synth Pecs Lights", "Synth Scutes", "Synth Pecs")

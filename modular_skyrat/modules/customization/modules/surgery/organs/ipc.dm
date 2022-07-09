@@ -11,13 +11,15 @@
 	#define SYNTH_EMP_BRAIN_DAMAGE_HEAVY 36
 	#define SYNTH_EMP_BRAIN_DAMAGE_LIGHT 12
 	#define SYNTH_EMP_BRAIN_DAMAGE_MAXIMUM 75
+/obj/item/organ/internal/brain/ipc_positron/synthliz
+	zone = BODY_ZONE_HEAD
 
 /obj/item/organ/internal/brain/ipc_positron/Insert(mob/living/carbon/user, special = 0, drop_if_replaced = TRUE)
 	..()
 	if(user.stat == DEAD && ishuman(user))
 		var/mob/living/carbon/human/user_human = user
 		if(user_human?.dna?.species && (REVIVES_BY_HEALING in user_human.dna.species.species_traits))
-			if(user_human.health > 50)
+			if(user_human.health >= 50)
 				user_human.revive(FALSE)
 
 /obj/item/organ/internal/brain/ipc_positron/emp_act(severity)
@@ -38,7 +40,7 @@
 	slot = "stomach"
 	desc = "A specialised cell, for IPC use only. Do not swallow."
 	status = ORGAN_ROBOTIC
-	organ_flags = ORGAN_SYNTHETIC
+	organ_flags = ORGAN_SYNTHETIC | ORGAN_UNREMOVABLE
 
 /obj/item/organ/internal/stomach/robot_ipc/emp_act(severity)
 	. = ..()
@@ -61,7 +63,7 @@
 	slot = ORGAN_SLOT_EARS
 	gender = PLURAL
 	status = ORGAN_ROBOTIC
-	organ_flags = ORGAN_SYNTHETIC
+	organ_flags = ORGAN_SYNTHETIC | ORGAN_UNREMOVABLE
 
 /obj/item/organ/internal/ears/robot_ipc/emp_act(severity)
 	. = ..()
@@ -128,7 +130,7 @@
 	cold_level_2_damage = 0
 	cold_level_3_damage = 0
 	status = ORGAN_ROBOTIC
-	organ_flags = ORGAN_SYNTHETIC
+	organ_flags = ORGAN_SYNTHETIC | ORGAN_UNREMOVABLE
 
 /obj/item/organ/internal/lungs/robot_ipc/emp_act(severity)
 	. = ..()
@@ -144,15 +146,33 @@
 /obj/item/organ/internal/heart/robot_ipc
 	name = "hydraulic pump engine"
 	desc = "An electronic device that handles the hydraulic pumps, powering one's robotic limbs."
-	organ_flags = ORGAN_SYNTHETIC
+	organ_flags = ORGAN_SYNTHETIC | ORGAN_UNREMOVABLE
 	status = ORGAN_ROBOTIC
 	icon = 'modular_skyrat/master_files/icons/obj/surgery.dmi'
 	icon_state = "heart-ipc"
+	var/action_available = TRUE
+	var/flow_rate = BASE_FLOW_RATE
+
+/obj/item/organ/internal/heart/robot_ipc/on_life(delta_time, times_fired)
+	if(owner)
+		if(DT_PROB(10, 5))
+			SEND_SIGNAL(owner, COMSIG_CARBON_HEART_UPDATE)
+		if(action_available && owner.falling_apart && DT_PROB(10, 5))
+			do_action()
+			action_available = FALSE
+			to_chat(owner, "INITIATING EMERGENCY SELF-REPAIR PROTOCOLS")
+			owner.reagents.add_reagent(/datum/reagent/medicine/nanite_slurry, 10)
+
+
+/obj/item/organ/internal/heart/robot_ipc/proc/do_action()
+	addtimer(CALLBACK(src, .proc/reset_action), 60 SECONDS)
+/obj/item/organ/internal/heart/robot_ipc/proc/reset_action()
+	action_available = TRUE
 
 /obj/item/organ/internal/liver/robot_ipc
 	name = "reagent processing unit"
 	desc = "An electronic device that processes the beneficial chemicals for the synthetic user."
-	organ_flags = ORGAN_SYNTHETIC
+	organ_flags = ORGAN_SYNTHETIC | ORGAN_UNREMOVABLE
 	status = ORGAN_ROBOTIC
 	icon = 'modular_skyrat/master_files/icons/obj/surgery.dmi'
 	icon_state = "liver-c"

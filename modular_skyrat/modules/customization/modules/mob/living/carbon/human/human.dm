@@ -25,7 +25,9 @@
 
 /mob/living/carbon/human/species/synthliz
 	race = /datum/species/robotic/synthliz
-
+	maxHealth = 500
+	health = 500
+	synth_functions = TRUE
 /mob/living/carbon/human/species/vox
 	race = /datum/species/vox
 
@@ -34,6 +36,9 @@
 
 /mob/living/carbon/human/species/ipc
 	race = /datum/species/robotic/ipc
+	maxHealth = 500
+	health = 500
+	synth_functions = TRUE
 
 /mob/living/carbon/human/species/mammal
 	race = /datum/species/mammal

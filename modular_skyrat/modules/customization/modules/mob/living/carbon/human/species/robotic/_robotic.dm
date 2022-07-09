@@ -15,6 +15,7 @@
 		TRAIT_NO_HUSK,
 		TRAIT_OXYIMMUNE,
 		TRAIT_LITERATE,
+		TRAIT_EASILY_WOUNDED,
 	)
 	mutant_bodyparts = list()
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_MAGIC | MIRROR_PRIDE | ERT_SPAWN | RACE_SWAP | SLIME_EXTRACT
@@ -39,10 +40,10 @@
 	learnable_languages = list(/datum/language/common, /datum/language/machine)
 
 /datum/species/robotic/spec_life(mob/living/carbon/human/H)
-	if(H.stat == SOFT_CRIT || H.stat == HARD_CRIT)
-		H.adjustFireLoss(1) //Still deal some damage in case a cold environment would be preventing us from the sweet release to robot heaven
-		H.adjust_bodytemperature(13) //We're overheating!!
+	if(H.stat == HARD_CRIT)
+//		H.adjustFireLoss(1) //Still deal some damage in case a cold environment would be preventing us from the sweet release to robot heaven
 		if(prob(10))
+			H.adjust_bodytemperature(13, min_temp = 360) //We're overheating!!
 			to_chat(H, span_warning("Alert: Critical damage taken! Cooling systems failing!"))
 			do_sparks(3, TRUE, H)
 

@@ -12,3 +12,5 @@
 	var/mob/living/carbon/carbon_owner = owner
 	if(target == carbon_owner.internal)
 		button.icon_state = "template_active"
+		button.maptext = MAPTEXT("<span style=\"font-size:5px\">REL:\n[carbon_owner.internal.distribute_pressure]\nCUR:\n[round(carbon_owner.internal.air_contents.return_pressure(),0.01)]\n</span>")
+		button.maptext_y = -32

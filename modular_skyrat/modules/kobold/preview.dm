@@ -22,3 +22,6 @@
 	glasses = /obj/item/clothing/glasses/night
 	uniform = /obj/item/clothing/under/pants/camo
 	shoes = /obj/item/clothing/shoes/combat
+
+/datum/outfit/kobold_preview/post_equip(mob/living/carbon/human/human, visualsOnly)
+	human.set_species(/datum/species/lizard/kobold)
